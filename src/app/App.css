@@ -1,0 +1,697 @@
+/* ========== Βασικές μεταβλητές χρωμάτων ========= */
+:root{
+  --bg-0:#0b0f16;
+  --bg-1:#0f141c;
+  --bg-2:#111822;
+  --bg-3:#16202e;
+  --text-0:#eaf2ff;
+  --text-1:#cfe1ff;
+  --muted:#a7b5c8;
+  --line:#263447;
+  --accent:#6ea0d1;
+  --accent-2:#49c5ff;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+/* Γονείς full */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-0);
+  color: var(--text-0);
+  font: 14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+}
+
+/* Επιλογή κειμένου & scrollbars */
+::selection{ background:#2a3a4f; color:#e6f0ff; }
+*{ scrollbar-width: thin; scrollbar-color:#2b3b52 transparent; }
+*::-webkit-scrollbar{ height:10px; width:10px; }
+*::-webkit-scrollbar-thumb{ background:#2b3b52; border-radius:10px; }
+*::-webkit-scrollbar-track{ background:transparent; }
+
+/* ========= Κεφαλίδα ========= */
+.topbar{
+  position: fixed;
+  inset:0 0 auto 0;
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 14px;
+  background: rgba(12,16,24,.92);
+  border-bottom:1px solid var(--line);
+  color: var(--text-0);
+  z-index:70;
+  backdrop-filter: blur(6px);
+}
+.brand{ display:flex; align-items:center; gap:10px; }
+.brand .logo{
+  width:28px; height:28px; border-radius:8px;
+  background:linear-gradient(135deg,var(--accent-2),var(--accent));
+  box-shadow:0 4px 12px rgba(73,197,255,.35);
+}
+.brand .title{ font-weight:800; letter-spacing:.2px; }
+.brand .subtitle{ font-size:12px; color:var(--muted); }
+.btn-sm{
+  border:1px solid var(--line); background:var(--bg-3); color:var(--text-0);
+  padding:6px 10px; border-radius:10px; cursor:pointer; transition:.15s ease;
+}
+.btn-sm:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+
+
+/* ========= Κεντρικό layout: Map + Bottom με scroll ========= */
+.main-layout{
+  margin-top:56px;              /* για να μην κρύβεται κάτω από την topbar */
+  display:flex;
+  flex-direction:column;
+  min-height:110vh;             /* >100vh ώστε να υπάρχει scroll */
+}
+
+
+/* ========= Layout: Map 70% + Bottom 30% ========= */
+#map{
+  position:relative;
+  flex:0 0 80vh;      /* ύψος χάρτη ~80vh */
+  min-height:320px;
+  background:#111;
+  z-index:10;
+}
+.maplibregl-canvas:focus { outline: none; }
+
+
+.bottom-panel{
+  position:relative;
+  flex:0 0 30vh;      /* ίδιο ύψος όπως πριν (~30vh) */
+  padding:10px 12px;
+  background:var(--bg-1);
+  color:var(--text-0);
+  border-top:1px solid var(--line);
+  z-index:15;
+}
+.panel-title{ font-weight:800; margin:4px 0 8px; color:var(--text-1); }
+
+.bottom-canvas-wrap{ height:calc(30vh - 72px); min-height:160px; }
+.bottom-canvas-wrap canvas{ display:block; width:100% !important; height:100% !important; }
+
+
+/* Ο καμβάς γεμίζει τον διαθέσιμο χώρο του panel */
+.bottom-canvas-wrap{ height:calc(30vh - 72px); min-height:160px; }
+.bottom-canvas-wrap canvas{ display:block; width:100% !important; height:100% !important; }
+
+/* ========= Tabs (Radar / Κατανομή) ========= */
+.tabs-row{ display:flex; gap:8px; margin-bottom:8px; align-items:center; flex-wrap:wrap; }
+.tab-btn{
+  padding:8px 12px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg-3); color:var(--text-0); cursor:pointer; transition:.15s ease;
+}
+.tab-btn:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+.tab-btn.active{ outline:2px solid #2a3a4f; }
+
+/* ========= Dist controls ========= */
+.dist-controls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+.dist-controls label{ color:var(--text-1); }
+.dist-controls select{
+  padding:6px 10px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg-3); color:var(--text-0);
+}
+.badge{
+  display:inline-block; padding:2px 8px; border-radius:999px;
+  background:#132032; border:1px solid var(--line); color:var(--text-1); font-size:12px;
+}
+
+/* ========= Δεξί side panel ========= */
+.side-panel{
+  position:absolute; top:68px; right:12px; z-index:60;
+  width:340px; max-height:66vh; overflow:auto;
+  background:rgba(15,20,28,.96); color:var(--text-0);
+  border:1px solid var(--line); border-radius:14px; box-shadow: var(--shadow); padding:12px;
+}
+.actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+button.btn{
+  padding:8px 12px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg-3); color:var(--text-0); cursor:pointer; transition:.15s ease;
+}
+button.btn:hover{ filter:brightness(1.08); transform: translateY(-1px); }
+
+/* Lock row */
+.lock-row{ display:flex; align-items:center; gap:8px; }
+
+/* ========= Ομάδες (accordion) ========= */
+.group{ margin:0 0 10px 0; border:none; }
+.group-head{
+  display:flex; align-items:center; gap:10px;
+  background: var(--bg-2); border:1px solid var(--line);
+  padding:10px; border-radius:12px; cursor:pointer; user-select:none; transition:.15s ease;
+}
+.group-head:hover{ filter:brightness(1.05); }
+.group-head .ico{ width:18px; height:18px; color:var(--accent); opacity:.95; }
+.group-content{ margin:8px 0 12px 8px; padding:10px 8px 6px 8px; border-left:1px dashed var(--line); }
+
+/* ========= Sliders ========= */
+.slider-row{
+  display:grid; grid-template-columns: 1fr 76px; gap:10px; align-items:center; margin:8px 0;
+}
+.slider-row label{ font-size:13px; color: var(--text-0); }
+.slider-row input[type="number"]{
+  width:76px; padding:6px 8px; border-radius:8px; border:1px solid var(--line);
+  background: var(--bg-3); color: var(--text-0);
+}
+.slider-row input[type="range"]{
+  grid-column: 1 / span 2; width:100%; height: 6px; border-radius: 999px; appearance:none; background: #263447;
+}
+.slider-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+  background: linear-gradient(135deg,var(--accent-2),var(--accent));
+  border: 2px solid #0b121b; box-shadow: 0 2px 6px rgba(0,0,0,.35);
+  cursor:pointer; transition:.12s ease;
+}
+.slider-row input[type="range"]::-webkit-slider-thumb:hover{ transform:scale(1.06); }
+
+/* ========= MapLibre UI ========= */
+.maplibregl-popup-content{
+  color:#0f1720; font: 13px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+  border-radius:12px; border:1px solid #dbe5f5; box-shadow: 0 10px 26px rgba(0,0,0,.25);
+}
+.maplibregl-popup-tip{ display:none; }
+.maplibregl-ctrl button{ border-radius:8px !important; }
+
+/* ========= Modal ========= */
+.modal{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:80; }
+.modal-card{
+  width:min(700px,90vw); max-height:80vh; overflow:auto;
+  background:var(--bg-1); color:var(--text-0); border:1px solid var(--line);
+  border-radius:14px; padding:16px; box-shadow: var(--shadow);
+}
+.modal-card h3{ margin:0 0 8px 0; color: var(--text-1); }
+.modal-card p{ margin:8px 0; color:var(--text-0); opacity:.92; }
+.modal-card .close{ float:right; }
+
+/* ========= Landing page ========= */
+.landing-root{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  color:var(--text-0);
+  z-index:100; /* πάνω από όλα */
+}
+
+/* background εικόνα από /public/media/mp.png */
+.landing-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:brightness(0.99) saturate(1.2);
+  z-index:-2;
+}
+
+/* overlay για να “κάθεται” ωραία η κάρτα */
+.landing-overlay{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(to bottom, rgba(2,6,15,0.1), rgba(1,4,10,0.3));
+  backdrop-filter:blur(2px);
+  z-index:-1;
+}
+
+.landing-card{
+  position:relative;
+  width:min(720px, 92vw);
+  padding:24px 22px 20px;
+  border-radius:18px;
+  border:1px solid var(--line);
+  background:rgba(10,16,26,0.96);
+  box-shadow:var(--shadow);
+}
+
+.landing-logo-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:12px;
+}
+
+.landing-logo-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 14px;
+  filter: drop-shadow(0 0 12px rgba(80, 200, 255, 0.45));
+}
+
+
+.landing-title{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+
+.landing-subtitle{
+  font-size:13px;
+  color:var(--muted);
+}
+
+.landing-tagline{
+  margin:10px 0 14px;
+  font-size:14px;
+  color:var(--text-1);
+}
+
+.landing-points{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:18px;
+}
+
+.landing-pill{
+  padding:6px 10px;
+  border-radius:999px;
+  background:#131b28;
+  border:1px solid var(--line);
+  font-size:12px;
+  color:var(--text-1);
+}
+
+.landing-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.landing-btn-primary,
+.landing-btn-ghost{
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  border:1px solid var(--line);
+  background:var(--bg-3);
+  color:var(--text-0);
+  transition:.16s ease;
+}
+
+.landing-btn-primary{
+  background:linear-gradient(135deg,var(--accent-2),var(--accent));
+  border-color:transparent;
+  color:#04101c;
+}
+
+.landing-btn-primary:hover{
+  filter:brightness(1.06);
+  transform:translateY(-1px);
+}
+
+.landing-btn-ghost{
+  background:transparent;
+}
+
+.landing-btn-ghost:hover{
+  background:rgba(21,32,48,.85);
+  transform:translateY(-1px);
+}
+
+.landing-footer{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:11px;
+  color:var(--muted);
+  border-top:1px solid #222b3a;
+  padding-top:8px;
+}
+
+@media (max-width: 600px){
+  .landing-card{
+    padding:18px 16px 16px;
+  }
+  .landing-title{
+    font-size:20px;
+  }
+}
+
+
+/* ========= Responsive ========= */
+@media (max-width: 1100px){ .side-panel{ width: 320px; } }
+@media (max-width: 900px){
+  .side-panel{ width: 300px; right:10px; }
+  #map{ height: calc(65vh - 56px); }
+  .bottom-panel{ top: calc(65vh); height: 35vh; }
+  .bottom-canvas-wrap{ height: calc(35vh - 72px); }
+}
+@media (max-width: 720px){
+  .side-panel{ width: min(92vw, 360px); left: 50%; right:auto; transform: translateX(-50%); top: 66px; }
+  .topbar .subtitle{ display:none; }
+}
+/* ========= Tabs πραγματικά χρησιμοποιούμενα από BottomPanel ========= */
+.tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.tab{
+  padding:6px 10px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--bg-3);
+  color:var(--text-0);
+  cursor:pointer;
+  font-size:13px;
+  line-height:1.2;
+  transition:.15s ease;
+}
+
+.tab:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+}
+
+.tab.active{
+  background:#132032;
+  border-color:#49c5ff;
+  color:#eaf2ff;
+}
+
+
+/* ========= Ranking panel ========= */
+.ranking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  height: calc(30vh - 92px);
+  min-height: 190px;
+}
+
+.ranking-card {
+  min-width: 0;
+  background: #0f1724;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ranking-title {
+  padding: 8px 10px;
+  font-weight: 800;
+  color: var(--text-1);
+  border-bottom: 1px solid var(--line);
+  background: #132032;
+}
+
+.ranking-table-wrap {
+  height: calc(100% - 38px);
+  overflow: auto;
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #263447;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ranking-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #111b2a;
+  color: var(--text-1);
+  font-weight: 700;
+}
+
+.ranking-table td {
+  color: var(--text-0);
+}
+
+.ranking-table code {
+  color: var(--text-1);
+  background: #101827;
+  padding: 1px 5px;
+  border-radius: 6px;
+}
+
+.ranking-empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 12px;
+}
+
+@media (max-width: 900px) {
+  .ranking-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .ranking-card {
+    min-height: 180px;
+  }
+}
+/* ========= Tabs πραγματικά χρησιμοποιούμενα από BottomPanel ========= */
+.tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.tab{
+  padding:6px 10px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:var(--bg-3);
+  color:var(--text-0);
+  cursor:pointer;
+  font-size:13px;
+  line-height:1.2;
+  transition:.15s ease;
+}
+
+.tab:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+}
+
+.tab.active{
+  background:#132032;
+  border-color:#49c5ff;
+  color:#eaf2ff;
+}
+
+
+/* ========= Ranking panel ========= */
+.ranking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  height: calc(30vh - 92px);
+  min-height: 190px;
+}
+
+.ranking-card {
+  min-width: 0;
+  background: #0f1724;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ranking-title {
+  padding: 8px 10px;
+  font-weight: 800;
+  color: var(--text-1);
+  border-bottom: 1px solid var(--line);
+  background: #132032;
+}
+
+.ranking-table-wrap {
+  height: calc(100% - 38px);
+  overflow: auto;
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.ranking-table th,
+.ranking-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #263447;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ranking-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #111b2a;
+  color: var(--text-1);
+  font-weight: 700;
+}
+
+.ranking-table td {
+  color: var(--text-0);
+}
+
+.ranking-table code {
+  color: var(--text-1);
+  background: #101827;
+  padding: 1px 5px;
+  border-radius: 6px;
+}
+
+.ranking-empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 12px;
+}
+
+@media (max-width: 900px) {
+  .ranking-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .ranking-card {
+    min-height: 180px;
+  }
+}
+/* ========= Methodology modal ========= */
+
+.methodology-modal {
+  width: min(860px, 92vw);
+  max-height: 84vh;
+}
+
+.methodology-modal h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.methodology-intro {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #101827;
+  color: var(--text-1);
+}
+
+.methodology-section {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #263447;
+}
+
+.methodology-section h4 {
+  margin: 0 0 6px 0;
+  color: var(--text-1);
+  font-size: 15px;
+}
+
+.methodology-section p {
+  margin: 6px 0;
+  color: var(--text-0);
+  opacity: 0.92;
+}
+
+.methodology-section ul {
+  margin: 8px 0 0 18px;
+  padding: 0;
+}
+
+.methodology-section li {
+  margin-bottom: 6px;
+  color: var(--text-0);
+  opacity: 0.92;
+}
+
+.methodology-formula {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #0b1220;
+  border: 1px solid var(--line);
+  color: var(--accent-2);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+.methodology-classes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  margin-top: 10px;
+}
+
+.methodology-classes div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-0);
+  font-size: 13px;
+}
+
+.class-swatch {
+  width: 22px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+  border: 1px solid #111827;
+}
+
+.class-swatch.c1 { background: #d73027; }
+.class-swatch.c2 { background: #fdae61; }
+.class-swatch.c3 { background: #ffffbf; }
+.class-swatch.c4 { background: #a6d96a; }
+.class-swatch.c5 { background: #1a9850; }
+
+.methodology-footer {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid #263447;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .methodology-classes {
+    grid-template-columns: 1fr;
+  }
+}
+.level-badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#132032;
+  color:var(--text-1);
+  font-size:12px;
+  margin-right:12px;
+  white-space:nowrap;
+}

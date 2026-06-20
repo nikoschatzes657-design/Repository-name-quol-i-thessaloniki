@@ -1,0 +1,43 @@
+thess_map/
+├── README.md
+├── backend/
+│   └── app/
+│       ├── __init__.py
+│       ├── api/
+│       │   ├── __init__.py
+│       │   └── routes.py
+│       ├── core/
+│       │   ├── __init__.py
+│       │   └── config.py
+│       ├── db/
+│       │   ├── __init__.py
+│       │   └── session.py
+│       ├── main.py
+│       └── utils/
+│           ├── __init__.py
+│           └── geojson.py
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── src/
+│   ├── app/
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   └── index.css
+│   ├── components/
+│   │   ├── BottomPanel.jsx
+│   │   ├── LegendPanel.jsx
+│   │   ├── MapView.jsx
+│   │   ├── Topbar.jsx
+│   │   ├── WeightsPanel.jsx
+│   │   └── panels/
+│   │       ├── DistPanel.jsx
+│   │       └── RadarPanel.jsx
+│   ├── hooks/
+│   │   └── useMapCommunities.js
+│   ├── main.jsx
+│   ├── palettes.js
+│   └── services/
+│       └── api.js
+└── vite.config.js

@@ -1,4 +1,4 @@
-# QuoL-i Thessaloniki
+ # QuoL-i Thessaloniki
 
 ### Urban Quality of Life Assessment through Earth Observation, GIS and Interactive WebGIS
 

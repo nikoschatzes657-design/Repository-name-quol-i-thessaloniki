@@ -40,52 +40,11 @@ export default function App() {
 
   const [lockSumToOne, setLockSumToOne] = useState(true);
 
-  const { geojson, allGeojson, fetchByBbox } = useMapCommunities({
-    apiBase: import.meta.env.VITE_API_URL,
+  const { geojson, allGeojson} = useMapCommunities({
     level: analysisLevel,
     weights,
   });
-/*
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
 
-    const loadViewport = async () => {
-      try {
-        const b = map.getBounds();
-        await fetchByBbox([
-          b.getWest(),
-          b.getSouth(),
-          b.getEast(),
-          b.getNorth(),
-        ]);
-      } catch {}
-    };
-
-    const onLoad = () => loadViewport();
-    map.on("load", onLoad);
-    map.on("moveend", loadViewport);
-    if (map.loaded()) loadViewport();
-    return () => {
-      map.off("load", onLoad);
-      map.off("moveend", loadViewport);
-    };
-  }, [fetchByBbox, analysisLevel]);*/
-/*
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const b = map.getBounds?.();
-    if (!b) return;
-    fetchByBbox([
-      b.getWest(),
-      b.getSouth(),
-      b.getEast(),
-      b.getNorth(),
-    ]).catch(() => {});
-  }, [weights, analysisLevel, fetchByBbox]);
-*/
-  // Αν είμαστε ακόμη στο landing, μην φορτώνεις map/panels
   if (showLanding) {
     return <LandingPage onEnter={() => setShowLanding(false)} />;
   }

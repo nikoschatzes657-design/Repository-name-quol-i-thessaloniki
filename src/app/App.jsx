@@ -1,7 +1,6 @@
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 
-import Topbar from "../components/Topbar.jsx"; // αν δεν το χρησιμοποιείς, μπορείς να το σβήσεις
 import LegendPanel from "../components/LegendPanel.jsx";
 import WeightsPanel from "../components/WeightsPanel.jsx";
 import BottomPanel from "../components/BottomPanel.jsx";
@@ -40,52 +39,11 @@ export default function App() {
 
   const [lockSumToOne, setLockSumToOne] = useState(true);
 
-  const { geojson, allGeojson, fetchByBbox } = useMapCommunities({
-    apiBase: import.meta.env.VITE_API_URL,
+  const { geojson, allGeojson} = useMapCommunities({
     level: analysisLevel,
     weights,
   });
-/*
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
 
-    const loadViewport = async () => {
-      try {
-        const b = map.getBounds();
-        await fetchByBbox([
-          b.getWest(),
-          b.getSouth(),
-          b.getEast(),
-          b.getNorth(),
-        ]);
-      } catch {}
-    };
-
-    const onLoad = () => loadViewport();
-    map.on("load", onLoad);
-    map.on("moveend", loadViewport);
-    if (map.loaded()) loadViewport();
-    return () => {
-      map.off("load", onLoad);
-      map.off("moveend", loadViewport);
-    };
-  }, [fetchByBbox, analysisLevel]);*/
-/*
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map) return;
-    const b = map.getBounds?.();
-    if (!b) return;
-    fetchByBbox([
-      b.getWest(),
-      b.getSouth(),
-      b.getEast(),
-      b.getNorth(),
-    ]).catch(() => {});
-  }, [weights, analysisLevel, fetchByBbox]);
-*/
-  // Αν είμαστε ακόμη στο landing, μην φορτώνεις map/panels
   if (showLanding) {
     return <LandingPage onEnter={() => setShowLanding(false)} />;
   }
@@ -191,7 +149,7 @@ export default function App() {
       <div className="methodology-section">
         <h4>1. Χωρικές μονάδες ανάλυσης</h4>
         <p>
-          <p>
+          
         Η εφαρμογή εστιάζει στην ανάλυση του σύνθετου δείκτη ποιότητας ζωής
         σε επίπεδο Δημοτικών Κοινοτήτων. Η επιλογή της Δημοτικής Κοινότητας
         ως τελικής χωρικής μονάδας επιτρέπει τη σύνθεση κοινωνικοοικονομικών,
@@ -199,7 +157,7 @@ export default function App() {
         Οι δείκτες προσβασιμότητας έχουν υπολογιστεί σε λεπτομερέστερη χωρική
         κλίμακα και στη συνέχεια ενσωματώθηκαν στο επίπεδο των Δημοτικών
         Κοινοτήτων.
-      </p>
+      
         </p>
       </div>
 

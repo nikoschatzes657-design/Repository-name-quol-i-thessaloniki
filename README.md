@@ -159,6 +159,16 @@ The interactive application supports:
 
 ## 11. System Architecture
 
+### Current Deployment: Static WebGIS Architecture
+
+The deployed version of QuoL-i Thessaloniki follows a client-side WebGIS architecture.
+
+Preprocessed geospatial data and normalized indicators are stored in a static GeoJSON file containing the geometries and attributes of 15 municipal communities.
+
+The application loads the GeoJSON dataset directly in the browser and dynamically recalculates the composite Quality of Life index whenever the user modifies the indicator weights.
+
+The deployed application does not require an active backend server or database connection for loading the QoL dataset or calculating the composite index.
+
 ```mermaid
 flowchart TD
     A[Satellite Imagery] --> D[Geospatial Data Processing]
@@ -166,11 +176,31 @@ flowchart TD
     C[Urban Accessibility Data] --> D
     D --> E[Indicator Calculation]
     E --> F[Normalization and MCDA]
-    F --> G[PostGIS Database]
-    G --> H[FastAPI Backend]
-    H --> I[React Frontend]
-    I --> J[Interactive WebGIS]
+    F --> G[Static GeoJSON Dataset]
+    G --> H[Client-side Data Loading]
+    H --> I[Dynamic QoL Calculation]
+    I --> J[React Application]
+    J --> K[MapLibre GL JS]
+    J --> L[Chart.js]
+    K --> M[Interactive WebGIS]
+    L --> M
 ```
+
+### Data Flow
+
+1. Load the static GeoJSON dataset.
+2. Retrieve municipal community geometries and normalized indicators.
+3. Recalculate composite QoL scores using the selected weights.
+4. Update the thematic map and statistical visualizations.
+5. Enable interactive exploration and comparison of spatial patterns.
+
+### Original Development Architecture
+
+During the initial development phase, the project implemented a client-server architecture using Python, FastAPI, PostgreSQL and PostGIS.
+
+For the final public deployment, the application was adapted to a static GeoJSON-based architecture to simplify hosting and eliminate the need for an active backend and database connection.
+
+The earlier backend implementation is preserved in the [legacy-backend branch](../../tree/legacy-backend) for reference.
 
 ## 12. Technology Stack
 
@@ -178,42 +208,45 @@ flowchart TD
 
 - React
 - Vite
+- JavaScript
 - MapLibre GL JS
 - Chart.js
-- JavaScript
+- HTML
+- CSS
 
-### Backend
+### Geospatial Data and Processing
 
-- Python
-- FastAPI
-
-### Database
-
-- PostgreSQL
-- PostGIS
+- GeoJSON
+- Client-side geospatial data loading
+- Dynamic weighted aggregation
+- Thematic mapping
+- Interactive statistical visualization
 
 ### Scientific Methods
 
-- Geographic Information Systems
-- Earth Observation
-- Remote Sensing
+- Geographic Information Systems (GIS)
+- Earth Observation (EO)
+- Remote Sensing (RS)
 - Spatial Analysis
 - Spatial Statistics
-- Multi-Criteria Decision Analysis
-- Analytic Hierarchy Process
+- Multi-Criteria Decision Analysis (MCDA)
+- Analytic Hierarchy Process (AHP)
 
-### Deployment
+### Original Backend Architecture (Archived)
 
+- Python
+- FastAPI
+- PostgreSQL
+- PostGIS
+
+### Version Control and Deployment
+
+- Git
 - GitHub
 - Vercel
 
-## 13. Limitations
 
-- Dependence on indicator selection and data availability.
-- Sensitivity to normalization and weighting decisions.
-- Spatial aggregation effects.
-- Temporal limitations of the reference datasets.
-- Limitations of the accessibility assessment methodology.
+
 
 ## 14. Future Research
 

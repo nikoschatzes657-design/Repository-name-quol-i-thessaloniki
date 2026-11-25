@@ -1,5 +1,5 @@
 // src/hooks/useMapCommunities.js
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { computeScoreOT, computeScoreDK, clamp01 } from "src/lib/scoring.js";
 import { DEFAULT_WEIGHTS_OT } from "src/lib/constants.js";
 
@@ -102,14 +102,9 @@ export function useMapCommunities({ level = "dk", weights }) {
     return enrichGeojson(baseGeojson, level, weights);
   }, [baseGeojson, level, weights]);
 
-  const fetchByBbox = useCallback(async () => {
-    return enrichedGeojson;
-  }, [enrichedGeojson]);
-
-  return {
-    geojson: enrichedGeojson,
-    allGeojson: enrichedGeojson,
-    fetchByBbox,
-    loading,
-  };
+ return {
+  geojson: enrichedGeojson,
+  allGeojson: enrichedGeojson,
+  loading,
+ };
 }
